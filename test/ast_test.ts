@@ -1,7 +1,7 @@
 import { assertEquals } from "std/testing/asserts.ts"
 import {convert} from 'src/ast.ts'
 
-Deno.test(function convertEmptyJsonStr() {
+Deno.test(function convertEmptyJsonString() {
   try {
     convert('', 'json1')
   } catch (error) {
@@ -10,7 +10,7 @@ Deno.test(function convertEmptyJsonStr() {
     }
   }
 })
-Deno.test(function convertJsonStr() {
+Deno.test(function convertObjectJsonString() {
   const jsonStr = `{
     name: "a1",
     age: 10,
@@ -92,3 +92,22 @@ Deno.test(function convertJsonStr() {
 }`
   assertEquals(convert(jsonStr, 'json1'), resultTypeStr)
 });
+Deno.test(function convertArrayJsonString() {
+  const jsonStr = `['a', 'a']`
+  const resultTypeStr = `type Json1 = string[]`
+  assertEquals(convert(jsonStr, 'json1'), resultTypeStr)
+})
+Deno.test(function convertTupleJsonString() {
+  const jsonStr = `['a', 1]`
+  const resultTypeStr = `type Json1 = Array<string | number>`
+  assertEquals(convert(jsonStr, 'json1'), resultTypeStr)
+})
+Deno.test(function convertErrorString() {
+  try {
+    convert(`1`)
+    convert(`"1"`)
+    convert(`a`)
+  } catch (error) {
+    assertEquals(error.message, 'json error')
+  }
+})
