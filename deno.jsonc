@@ -1,0 +1,9 @@
+{
+  "tasks": {
+    "run": "deno run main.ts",
+    "compile": "deno compile -o \"dist/jsontype\" main.ts"
+  },
+  "imports": {
+    "std/": "https://deno.land/std@0.175.0/"
+  }
+}
