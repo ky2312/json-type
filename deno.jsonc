@@ -1,9 +1,11 @@
 {
   "tasks": {
-    "run": "deno run main.ts",
+    "run": "deno run --allow-env main.ts",
+    "test": "deno test --allow-env main.ts",
     "compile": "deno compile -o \"dist/jsontype\" main.ts"
   },
   "imports": {
-    "std/": "https://deno.land/std@0.175.0/"
+    "std/": "https://deno.land/std@0.175.0/",
+    "src/": "./src/"
   }
 }
