@@ -1,5 +1,5 @@
 import {ensureFile} from 'std/fs/mod.ts'
-import {parseCommand} from 'src/utils.ts'
+import {parseCommand} from 'src/command.ts'
 import {convert} from 'src/ast.ts'
 
 if (import.meta.main) {
