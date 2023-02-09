@@ -1,4 +1,5 @@
 import {ensureFile} from 'std/fs/mod.ts'
+import {error as errorlog} from 'colorlog'
 import {parseCommand} from 'src/command.ts'
 import {convert} from 'src/ast.ts'
 
@@ -10,9 +11,9 @@ if (import.meta.main) {
     await output(jsonType, data.outputPath)
   } catch (error) {
     if (error instanceof Error) {
-      console.error(error.message)
+      console.error(errorlog(error.message))
     } else {
-      console.error(error)
+      console.error(errorlog(error))
     }
   }
 }

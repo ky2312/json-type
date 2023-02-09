@@ -5,8 +5,9 @@
     "compile": "deno compile -o \"dist/jsontype\" main.ts"
   },
   "imports": {
-    "std/": "https://deno.land/std@0.175.0/",
+    "pkg/": "./",
     "src/": "./src/",
-    "pkg/": "./"
+    "std/": "https://deno.land/std@0.175.0/",
+    "colorlog": "https://deno.land/x/colorlog@v1.0/mod.ts"
   }
 }

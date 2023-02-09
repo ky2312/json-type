@@ -1,3 +1,4 @@
+import {error as errorlog} from 'colorlog'
 import projectConfig from 'pkg/project.config.json' assert {type: 'json'}
 
 interface IGetCommandDataOptions {
@@ -22,7 +23,7 @@ export function parseCommand() {
 
   const notInclude = !Object.entries(commandData).some(([_key, value]) => value.include)
   if (notInclude) {
-    console.log('not match all params\n')
+    console.error(errorlog('not match all params\n'))
   }
   if (commandData.helpData.include || notInclude) {
     console.log(`convert json to typescript type.
@@ -46,7 +47,7 @@ jsontype [--help | -h] [--version | -v] [--json <json string>] [--file <path>] [
       const content = Deno.readTextFileSync(commandData.filePathData.value)
       data.jsonStr = content
     } catch (error) {
-      console.error(error)
+      console.error(errorlog(error))
       Deno.exit(0)
     }
   }
