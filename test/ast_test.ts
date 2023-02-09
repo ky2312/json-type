@@ -6,7 +6,7 @@ Deno.test(function convertEmptyJsonString() {
     convert('', 'json1')
   } catch (error) {
     if (error instanceof Error) {
-      assertEquals(error.message, 'json cannot be empty')
+      assertEquals(error.message, 'json cannot empty')
     }
   }
 })

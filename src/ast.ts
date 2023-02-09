@@ -36,7 +36,7 @@ export function convert(jsonStr: string, name = 'json'): string {
   return output(sourceFile, _typeNode)
 }
 function verifyJsonStr(jsonStr: string): void {
-  if (!jsonStr) throw new Error('json cannot be empty')
+  if (!jsonStr) throw new Error('json cannot empty')
   try {
     const json = JSON.parse(jsonStr)
     if (!(json && typeof json === 'object')) {
