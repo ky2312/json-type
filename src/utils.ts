@@ -1,3 +1,5 @@
+import projectConfig from 'pkg/project.config.json' assert {type: 'json'}
+
 export function parseCommand() {
   const helpData = getCommandData('--help', false)
   const jsonData = getCommandData('--json', true)
@@ -7,8 +9,9 @@ export function parseCommand() {
 
   if (helpData.include) {
     console.log(`convert json to typescript type.
+  version: ${projectConfig.version}
 
-    jsontype [--help] [--json <json string>]
+  jsontype [--help] [--json <json string>] [--file <path>]
 `)
     Deno.exit(0)
   }
