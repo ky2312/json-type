@@ -1,7 +1,8 @@
 import ts from 'npm:typescript'
 
 export function convert(jsonStr: string, name = 'json'): string {
-  if (!jsonStr) throw new Error('json can not be empty')
+  verifyJsonStr(jsonStr)
+
   const content = `const ${name} = ${jsonStr}`
   const sourceFile = ts.createSourceFile('content', content, ts.ScriptTarget.ES2015)
   const firstStatement = sourceFile.statements[0]
@@ -22,6 +23,17 @@ export function convert(jsonStr: string, name = 'json'): string {
   }
 
   return output(sourceFile, createInterface(_name, propertySignatures))
+}
+function verifyJsonStr(jsonStr: string): void {
+  if (!jsonStr) throw new Error('json can not be empty')
+  try {
+    const json = JSON.parse(jsonStr)
+    if (!(json && typeof json === 'object')) {
+      throw new Error('json error')
+    }
+  } catch (_error) {
+    throw new Error('json error')
+  }
 }
 function convertPropertyAssignmentToPropertySignature(p: ts.PropertyAssignment): ts.PropertySignature {
   const type = convertExperssionToTypeNode(p.initializer)
