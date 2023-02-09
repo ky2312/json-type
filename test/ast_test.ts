@@ -1,4 +1,4 @@
-import { assertEquals } from "std/testing/asserts.ts"
+import { assertEquals, assert } from "std/testing/asserts.ts"
 import {convert} from 'src/ast.ts'
 
 Deno.test(function convertEmptyJsonString() {
@@ -103,4 +103,8 @@ Deno.test(function convertErrorString() {
   } catch (error) {
     assertEquals(error.message, 'json error')
   }
+})
+Deno.test(function outputName() {
+  const jsonStr = `{\"a\": 1}`
+  assert(convert(jsonStr, 'foojson').startsWith('interface IFoojson'))
 })

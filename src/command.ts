@@ -5,9 +5,11 @@ export function parseCommand() {
   const jsonData = getCommandData('--json', true)
   const filePathData = getCommandData('--file', true)
   const outputPathData = getCommandData('--output', true)
+  const nameData = getCommandData('--name', true)
   const data = {
     jsonStr: '',
     outputPath: '',
+    name: '',
   }
 
   if (helpData.include) {
@@ -36,6 +38,11 @@ export function parseCommand() {
   if (outputPathData.include) {
     if (!outputPathData.value) throw new Error('output path cannot empty')
     data.outputPath = outputPathData.value
+  }
+
+  if (nameData.include) {
+    if (!nameData.value) throw new Error('name cannot empty')
+    data.name = nameData.value
   }
 
   return data

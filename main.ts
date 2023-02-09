@@ -5,7 +5,7 @@ import {convert} from 'src/ast.ts'
 if (import.meta.main) {
   try {
     const data = parseCommand()
-    const jsonType = convert(data.jsonStr)
+    const jsonType = convert(data.jsonStr, data.name || undefined)
 
     await output(jsonType, data.outputPath)
   } catch (error) {
