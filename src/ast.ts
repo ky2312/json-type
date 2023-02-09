@@ -14,18 +14,29 @@ export function convert(jsonStr: string, name = 'json'): string {
     _name = variableDeclaration.name.escapedText.toString()
   }
 
-  if (!variableDeclaration.initializer || !ts.isObjectLiteralExpression(variableDeclaration.initializer)) throw new Error('initializer of variable declaration type error')
-  const propertySignatures: ts.PropertySignature[] = []
-  for (const p of variableDeclaration.initializer.properties) {
-    if (ts.isPropertyAssignment(p)) {
-      propertySignatures.push(convertPropertyAssignmentToPropertySignature(p))
+  if (!variableDeclaration.initializer) throw new Error('variable cannot empty')
+
+  let _typeNode: ts.Node | undefined = undefined
+  if (ts.isObjectLiteralExpression(variableDeclaration.initializer)) {
+    const propertySignatures: ts.PropertySignature[] = []
+    for (const p of variableDeclaration.initializer.properties) {
+      if (ts.isPropertyAssignment(p)) {
+        propertySignatures.push(convertPropertyAssignmentToPropertySignature(p))
+      }
+    }
+    _typeNode = createInterface(_name, propertySignatures)
+  } else if (ts.isArrayLiteralExpression(variableDeclaration.initializer)) {
+    const typeNode = convertExperssionToTypeNode(variableDeclaration.initializer)
+    if (typeNode) {
+      _typeNode = createTypeAlias(_name, typeNode)
     }
   }
 
-  return output(sourceFile, createInterface(_name, propertySignatures))
+  if (!_typeNode) throw new Error('type node cannot empty')
+  return output(sourceFile, _typeNode)
 }
 function verifyJsonStr(jsonStr: string): void {
-  if (!jsonStr) throw new Error('json can not be empty')
+  if (!jsonStr) throw new Error('json cannot be empty')
   try {
     const json = JSON.parse(jsonStr)
     if (!(json && typeof json === 'object')) {
@@ -38,9 +49,15 @@ function verifyJsonStr(jsonStr: string): void {
 function convertPropertyAssignmentToPropertySignature(p: ts.PropertyAssignment): ts.PropertySignature {
   const type = convertExperssionToTypeNode(p.initializer)
 
+  let name = ''
+  if (ts.isIdentifier(p.name)) {
+    name = p.name.escapedText.toString()
+  } else if (ts.isStringLiteral(p.name)) {
+    name = p.name.text
+  }
   return ts.factory.createPropertySignature(
     undefined,
-    p.name,
+    name,
     undefined,
     type,
   )
@@ -97,16 +114,26 @@ function removeRepetitionTypeNodes(typeNodes: ts.TypeNode[]): ts.TypeNode[] {
   return Array.from(m).map(([_k, t]) => t)
 }
 function createInterface(name: string, propertySignatures: ts.PropertySignature[]) {
-  const _name = `I${name.slice(0, 1).toUpperCase()}${name.slice(1)}`
   return ts.factory.createInterfaceDeclaration(
     undefined,
-    _name,
+    `I${createOutputId(name)}`,
     undefined,
     undefined,
     propertySignatures,
   )
 }
-function output(sourceFile: ts.SourceFile, interfaceDeclaration: ts.InterfaceDeclaration): string {
+function createTypeAlias<T extends ts.TypeNode>(name: string, typeNode: T) {
+  return ts.factory.createTypeAliasDeclaration(
+    undefined,
+    createOutputId(name),
+    undefined,
+    typeNode,
+  )
+}
+function createOutputId(name: string) {
+  return `${name.slice(0, 1).toUpperCase()}${name.slice(1)}`
+}
+function output<T extends ts.Node>(sourceFile: ts.SourceFile, typeNode: T): string {
   const printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed})
-  return printer.printNode(ts.EmitHint.Unspecified, interfaceDeclaration, sourceFile)
+  return printer.printNode(ts.EmitHint.Unspecified, typeNode, sourceFile)
 }

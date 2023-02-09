@@ -6,63 +6,58 @@ Deno.test(function convertEmptyJsonString() {
     convert('', 'json1')
   } catch (error) {
     if (error instanceof Error) {
-      assertEquals(error.message, 'json can not be empty')
+      assertEquals(error.message, 'json cannot be empty')
     }
   }
 })
 Deno.test(function convertObjectJsonString() {
   const jsonStr = `{
-    name: "a1",
-    age: 10,
-    isUser: false,
-    isMan: true,
-    subname1: undefined,
-    subname2: null,
-    ages: [1, 2],
-    names: ['a1', 'a2'],
-    ids: [123, '456'],
-    users: [
+    "name": "a1",
+    "age": 10,
+    "isUser": false,
+    "isMan": true,
+    "subname2": null,
+    "ages": [1, 2],
+    "names": ["a1", "a2"],
+    "ids": [123, "456"],
+    "users": [
       {
-        name: "a1",
-        age: 10,
-        isUser: false,
-        isMan: true,
-        subname1: undefined,
-        subname2: null,
-        ages: [1, 2],
-        names: ['a1', 'a2'],
-        ids: [123, '123'],
+        "name": "a1",
+        "age": 10,
+        "isUser": false,
+        "isMan": true,
+        "subname2": null,
+        "ages": [1, 2],
+        "names": ["a1", "a2"],
+        "ids": [123, "123"]
       },
       {
-        name: "a2",
-        age: 20,
-        isUser: true,
-        isMan: false,
-        subname1: undefined,
-        subname2: null,
-        ages: [10, 20],
-        names: ['b1', 'b2'],
-        ids: [456, '456'],
-      },
+        "name": "a2",
+        "age": 20,
+        "isUser": true,
+        "isMan": false,
+        "subname2": null,
+        "ages": [10, 20],
+        "names": ["b1", "b2"],
+        "ids": [456, "456"]
+      }
     ],
-    user: {
-      name: "a1",
-      age: 10,
-      isUser: false,
-      isMan: true,
-      subname1: undefined,
-      subname2: null,
-      ages: [1, 2],
-      names: ['a1', 'a2'],
-      ids: [123, '123'],
-    },
+    "user": {
+      "name": "a1",
+      "age": 10,
+      "isUser": false,
+      "isMan": true,
+      "subname2": null,
+      "ages": [1, 2],
+      "names": ["a1", "a2"],
+      "ids": [123, "123"]
+    }
   }`
   const resultTypeStr = `interface IJson1 {
     name: string;
     age: number;
     isUser: boolean;
     isMan: boolean;
-    subname1: undefined;
     subname2: undefined;
     ages: number[];
     names: string[];
@@ -72,7 +67,6 @@ Deno.test(function convertObjectJsonString() {
         age: number;
         isUser: boolean;
         isMan: boolean;
-        subname1: undefined;
         subname2: undefined;
         ages: number[];
         names: string[];
@@ -83,7 +77,6 @@ Deno.test(function convertObjectJsonString() {
         age: number;
         isUser: boolean;
         isMan: boolean;
-        subname1: undefined;
         subname2: undefined;
         ages: number[];
         names: string[];
@@ -93,13 +86,13 @@ Deno.test(function convertObjectJsonString() {
   assertEquals(convert(jsonStr, 'json1'), resultTypeStr)
 });
 Deno.test(function convertArrayJsonString() {
-  const jsonStr = `['a', 'a']`
-  const resultTypeStr = `type Json1 = string[]`
+  const jsonStr = `["a", "a"]`
+  const resultTypeStr = `type Json1 = string[];`
   assertEquals(convert(jsonStr, 'json1'), resultTypeStr)
 })
 Deno.test(function convertTupleJsonString() {
-  const jsonStr = `['a', 1]`
-  const resultTypeStr = `type Json1 = Array<string | number>`
+  const jsonStr = `["a", 1]`
+  const resultTypeStr = `type Json1 = Array<string | number>;`
   assertEquals(convert(jsonStr, 'json1'), resultTypeStr)
 })
 Deno.test(function convertErrorString() {
